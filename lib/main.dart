@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'models/product.dart';
+import 'pages/product_detail_page.dart';
+import 'pages/login_page.dart';
+
+List<Product> cartItems = [];
 
 void main() {
   runApp(const MyApp());
@@ -12,22 +17,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'OnMart Application',
+      title: 'OnMart',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 253, 131, 10),
         ),
-        useMaterial3: true, // aktifkan Material 3
+        useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'OnMart'),
+      home: const LoginPage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
   final String title;
+  final int initialIndex;
+
+  const MyHomePage({super.key, required this.title, this.initialIndex = 0});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -36,7 +42,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  // Widget untuk menampilkan gambar (asset / network)
   Widget buildProductImage(String imageUrl) {
     if (imageUrl.startsWith('http')) {
       return Image.network(imageUrl, fit: BoxFit.cover, width: double.infinity);
@@ -45,85 +50,139 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // halaman dummy untuk demo
-  static final List<Widget> _pages = [];
+  late final List<Widget> _pages;
 
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.initialIndex;
 
-    // isi _pages
-    _pages.addAll([
-      // Home Page: Grid Produk
+    _pages = [
+      // Home Page
       GridView.builder(
         padding: const EdgeInsets.all(10),
         itemCount: dummyProducts.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // 2 kolom
+          crossAxisCount: 2,
           childAspectRatio: 0.7,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
         itemBuilder: (ctx, i) {
           final product = dummyProducts[i];
-          return Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(12),
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                ctx,
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailPage(product: product),
+                ),
+              );
+            },
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(12),
+                      ),
+                      child: buildProductImage(product.imageUrl),
                     ),
-                    child: buildProductImage(product.imageUrl),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    product.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      product.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text("Rp ${product.price.toStringAsFixed(0)}"),
-                ),
-                const SizedBox(height: 6),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text("Rp ${product.price.toStringAsFixed(0)}"),
+                  ),
+                  const SizedBox(height: 6),
+                ],
+              ),
             ),
           );
         },
       ),
 
-      // Halaman Favorite
+      // Favorite
       const Center(
-        child: Text(" Favorite Page", style: TextStyle(fontSize: 20)),
+        child: Text("Favorite Page", style: TextStyle(fontSize: 20)),
       ),
 
-      // Halaman Cart
-      const Center(child: Text(" Cart Page", style: TextStyle(fontSize: 20))),
+      // Cart
+      CartPage(),
 
-      // Halaman Profile
-      const Center(
-        child: Text(" Profile Page", style: TextStyle(fontSize: 20)),
+      // Profile
+      FutureBuilder(
+        future: SharedPreferences.getInstance(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final prefs = snapshot.data!;
+          final name = prefs.getString('name') ?? "Guest";
+          final email = prefs.getString('email') ?? "Tidak ada email";
+
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircleAvatar(
+                  radius: 40,
+                  child: Icon(Icons.person, size: 50),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(email, style: const TextStyle(fontSize: 16)),
+                const SizedBox(height: 30),
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    await prefs.clear();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.logout),
+                  label: const Text("Logout"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
-    ]);
+    ];
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    setState(() => _selectedIndex = index);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // NAVBAR ATAS
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
@@ -131,15 +190,10 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         actions: [IconButton(icon: const Icon(Icons.search), onPressed: () {})],
       ),
-
-      // BODY
       body: _pages[_selectedIndex],
-
-      // NAVIGATION BAR BAWAH (Material 3)
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onItemTapped,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
@@ -164,5 +218,93 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+}
+
+class CartPage extends StatefulWidget {
+  @override
+  _CartPageState createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  @override
+  Widget build(BuildContext context) {
+    return cartItems.isEmpty
+        ? const Center(child: Text("Cart kosong"))
+        : ListView.builder(
+            padding: const EdgeInsets.all(10),
+            itemCount: cartItems.length,
+            itemBuilder: (ctx, i) {
+              final product = cartItems[i];
+              return Card(
+                child: ListTile(
+                  leading: Image.asset(
+                    product.imageUrl,
+                    width: 50,
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(product.name),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Harga satuan: Rp ${product.price.toStringAsFixed(0)}",
+                      ),
+                      Text(
+                        "Total: Rp ${(product.price * product.quantity).toStringAsFixed(0)}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // tombol minus
+                      IconButton(
+                        icon: const Icon(Icons.remove_circle_outline),
+                        onPressed: () {
+                          setState(() {
+                            if (product.quantity > 1) {
+                              product.quantity--;
+                            } else {
+                              cartItems.removeAt(i);
+                            }
+                          });
+                        },
+                      ),
+                      // jumlah
+                      Text("${product.quantity}"),
+                      // tombol plus
+                      IconButton(
+                        icon: const Icon(Icons.add_circle_outline),
+                        onPressed: () {
+                          setState(() {
+                            product.quantity++;
+                          });
+                        },
+                      ),
+                      // tombol beli
+                      ElevatedButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Berhasil membeli ${product.name} x${product.quantity} "
+                                "Total Rp ${(product.price * product.quantity).toStringAsFixed(0)}",
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text("Beli"),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
   }
 }
