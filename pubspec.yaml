@@ -59,6 +59,16 @@ flutter:
 
   assets:
      - assets/onmart.png
+     - assets/product/baju1.png
+     - assets/product/jam.png
+     - assets/product/shoes.png
+     - assets/product/ransel.png
+     - assets/product/nikedunk.png
+     - assets/product/monitor.png
+     - assets/product/headphone.png
+     - assets/product/keyboard.png
+     - assets/product/mouse.png
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
