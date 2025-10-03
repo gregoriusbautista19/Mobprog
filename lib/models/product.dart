@@ -6,6 +6,7 @@ class Product {
   final String description;
   final double rating;
   final int sold;
+  final String category;
   int quantity;
 
   Product({
@@ -16,11 +17,13 @@ class Product {
     required this.description,
     required this.rating,
     required this.sold,
+    required this.category,
     this.quantity = 1,
   });
 }
 
 // Dummy data
+// sepatu
 List<Product> dummyProducts = [
   Product(
     id: "1",
@@ -30,8 +33,21 @@ List<Product> dummyProducts = [
     description: "Sneakers Nike Dunk Low Retro White Black",
     rating: 4.8,
     sold: 150,
+    category: "shoes",
   ),
 
+  Product(
+    id: "18",
+    name: "Casual Vans",
+    price: 1500000,
+    imageUrl: "assets/product/vans.png",
+    description: "Casual Shoes Vans Old Skool Black White",
+    rating: 4.8,
+    sold: 150,
+    category: "shoes",
+  ),
+
+  // baju pria
   Product(
     id: "2",
     name: "Kaos Polos",
@@ -40,8 +56,110 @@ List<Product> dummyProducts = [
     description: "Kaos Polos Cotton Combed 30s",
     rating: 4.5,
     sold: 500,
+    category: "Men_fashion",
   ),
 
+  Product(
+    id: "9",
+    name: "Kaos PML",
+    price: 1500000,
+    imageUrl: "assets/product/men1.png",
+    description: "Kaos PML Pcamy Cotton 50s",
+    rating: 4.5,
+    sold: 500,
+    category: "Men_fashion",
+  ),
+
+  Product(
+    id: "10",
+    name: "Kaos Luoqing",
+    price: 6000000,
+    imageUrl: "assets/product/men2.png",
+    description: "Kaos Luoqing Based Limitid",
+    rating: 4.5,
+    sold: 500,
+    category: "Men_fashion",
+  ),
+
+  Product(
+    id: "11",
+    name: "Kaos Correvry NBA",
+    price: 3000000,
+    imageUrl: "assets/product/men3.png",
+    description: "Kaos Correvry NBA Boston Celtics",
+    rating: 4.6,
+    sold: 500,
+    category: "Men_fashion",
+  ),
+
+  Product(
+    id: "12",
+    name: "Kaos HR Super",
+    price: 2000000,
+    imageUrl: "assets/product/men4.png",
+    description: "Kaos HR Super star white",
+    rating: 4.8,
+    sold: 200,
+    category: "Men_fashion",
+  ),
+
+  Product(
+    id: "13",
+    name: "Kaos BMW M3",
+    price: 5500000,
+    imageUrl: "assets/product/men4.png",
+    description: "Kaos BMW M3 Motorrad Limited Edition",
+    rating: 4.9,
+    sold: 40,
+    category: "Men_fashion",
+  ),
+
+  // baju wanita
+  Product(
+    id: "14",
+    name: "Kaos 90 Red",
+    price: 1130000,
+    imageUrl: "assets/product/women1.png",
+    description: "Kaos 90 Red Girl Compact",
+    rating: 4.5,
+    sold: 300,
+    category: "Women_fashion",
+  ),
+
+  Product(
+    id: "15",
+    name: "Kaos Pink Drick",
+    price: 1130000,
+    imageUrl: "assets/product/women2.png",
+    description: "Kaos Pink Drick Girl Compact",
+    rating: 4.6,
+    sold: 300,
+    category: "Women_fashion",
+  ),
+
+  Product(
+    id: "16",
+    name: "Kaos Addidas Sun Flower",
+    price: 2000000,
+    imageUrl: "assets/product/women3.png",
+    description: "Kaos Addidas Sun Flower Pitcher",
+    rating: 4.7,
+    sold: 150,
+    category: "Women_fashion",
+  ),
+
+  Product(
+    id: "17",
+    name: "Hoodie Yankee Black Original",
+    price: 4500000,
+    imageUrl: "assets/product/women4.png",
+    description: "Hoodie Yankee Black Original Girl",
+    rating: 4.8,
+    sold: 100,
+    category: "Women_fashion",
+  ),
+
+  // accesories
   Product(
     id: "3",
     name: "Tas Ransel",
@@ -50,6 +168,7 @@ List<Product> dummyProducts = [
     description: "Tas Ransel Laptop Waterproof",
     rating: 4.6,
     sold: 200,
+    category: "accessories",
   ),
 
   Product(
@@ -60,8 +179,10 @@ List<Product> dummyProducts = [
     description: "Smartwatch Series 6 40mm",
     rating: 4.7,
     sold: 300,
+    category: "accessories",
   ),
 
+  // electronics
   Product(
     id: "5",
     name: "Keyboard ROG",
@@ -70,6 +191,7 @@ List<Product> dummyProducts = [
     description: "Mechanical Gaming Keyboard ROG",
     rating: 4.9,
     sold: 100,
+    category: "electronics",
   ),
 
   Product(
@@ -80,6 +202,7 @@ List<Product> dummyProducts = [
     description: "Gaming Mouse ROG",
     rating: 4.5,
     sold: 400,
+    category: "electronics",
   ),
 
   Product(
@@ -90,6 +213,7 @@ List<Product> dummyProducts = [
     description: "27 Inch 144Hz Gaming Monitor",
     rating: 4.8,
     sold: 150,
+    category: "electronics",
   ),
 
   Product(
@@ -100,5 +224,6 @@ List<Product> dummyProducts = [
     description: "Wireless Noise Cancelling Headphone",
     rating: 4.6,
     sold: 200,
+    category: "electronics",
   ),
 ];

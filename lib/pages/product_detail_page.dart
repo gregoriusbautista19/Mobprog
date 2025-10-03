@@ -20,6 +20,7 @@ class ProductDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 📸 Gambar produk
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(
@@ -31,6 +32,7 @@ class ProductDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
+            // 📌 Nama & Harga
             Text(
               product.name,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -45,6 +47,7 @@ class ProductDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
+            // ⭐ Rating & Sold
             Row(
               children: [
                 Icon(Icons.star, color: Colors.amber.shade700),
@@ -54,6 +57,7 @@ class ProductDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
+            // 📖 Deskripsi
             const Text(
               "Deskripsi",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -62,6 +66,7 @@ class ProductDetailPage extends StatelessWidget {
             Text(product.description),
             const SizedBox(height: 30),
 
+            // 🛒 Tombol aksi
             Row(
               children: [
                 Expanded(
@@ -72,21 +77,28 @@ class ProductDetailPage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
                     onPressed: () {
-                      // Tambah ke cart
-                      cartItems.add(product);
+                      // ✅ Cek apakah produk sudah ada di cart
+                      final existingIndex = cartItems.indexWhere(
+                        (p) => p.id == product.id,
+                      );
+                      if (existingIndex != -1) {
+                        cartItems[existingIndex].quantity++;
+                      } else {
+                        cartItems.add(product);
+                      }
 
-                      // Balik ke halaman utama
+                      // Arahkan ke cart page
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const MyHomePage(
                             title: "OnMart",
-                            initialIndex: 2,
+                            initialIndex: 2, // langsung ke tab Cart
                           ),
                         ),
                       );
                     },
-                    child: const Text("Checkout"),
+                    child: const Text("Tambah ke Keranjang"),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -98,9 +110,12 @@ class ProductDetailPage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
                     onPressed: () {
+                      // 👉 Di sini bisa arahkan ke halaman checkout langsung
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Berhasil membeli produk"),
+                        SnackBar(
+                          content: Text(
+                            "Pembelian langsung ${product.name} berhasil!",
+                          ),
                         ),
                       );
                     },

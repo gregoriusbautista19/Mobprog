@@ -71,6 +71,21 @@ flutter:
      - assets/product/headphone.png
      - assets/product/keyboard.png
      - assets/product/mouse.png
+     - assets/banner/nike.png
+     - assets/banner/women.png
+     - assets/banner/computer.png
+     - assets/banner/man.png
+     - assets/banner/shoes.png
+     - assets/product/women1.png
+     - assets/product/women2.png
+     - assets/product/women3.png
+     - assets/product/women4.png
+     - assets/product/men1.png
+     - assets/product/men2.png
+     - assets/product/men3.png
+     - assets/product/men4.png
+     - assets/product/men5.png
+     - assets/product/vans.png
 
 
   # To add assets to your application, add an assets section, like this:
