@@ -18,7 +18,6 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
 
   void _login() async {
     final prefs = await SharedPreferences.getInstance();
-    // Gunakan key yang berbeda untuk seller
     String? savedEmail = prefs.getString('seller_email');
     String? savedPassword = prefs.getString('seller_password');
 

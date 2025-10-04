@@ -11,7 +11,6 @@ class SellerSignUpPage extends StatefulWidget {
 class _SellerSignUpPageState extends State<SellerSignUpPage> {
   final _formKey = GlobalKey<FormState>();
 
-  // Menambahkan controller untuk nama toko
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _storeNameController = TextEditingController(); 
   final TextEditingController _emailController = TextEditingController();
@@ -24,7 +23,6 @@ class _SellerSignUpPageState extends State<SellerSignUpPage> {
   void _signUp() async {
     if (_formKey.currentState!.validate()) {
       final prefs = await SharedPreferences.getInstance();
-      // Simpan data pendaftaran dengan key khusus seller
       await prefs.setString('seller_name', _nameController.text);
       await prefs.setString('seller_store_name', _storeNameController.text);
       await prefs.setString('seller_email', _emailController.text);
@@ -34,7 +32,7 @@ class _SellerSignUpPageState extends State<SellerSignUpPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Akun seller berhasil dibuat! Silakan login.")),
         );
-        // Kembali ke halaman login seller setelah berhasil mendaftar
+    
         Navigator.pop(context);
       }
     }
@@ -65,7 +63,7 @@ class _SellerSignUpPageState extends State<SellerSignUpPage> {
                 ),
                 const SizedBox(height: 40),
 
-                // Nama Lengkap
+              
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
@@ -77,7 +75,6 @@ class _SellerSignUpPageState extends State<SellerSignUpPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Nama Toko
                 TextFormField(
                   controller: _storeNameController,
                   decoration: const InputDecoration(
@@ -89,7 +86,6 @@ class _SellerSignUpPageState extends State<SellerSignUpPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Email
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -105,7 +101,6 @@ class _SellerSignUpPageState extends State<SellerSignUpPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Password
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
@@ -126,7 +121,6 @@ class _SellerSignUpPageState extends State<SellerSignUpPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Konfirmasi Password
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: _obscureConfirmPassword,
@@ -147,7 +141,6 @@ class _SellerSignUpPageState extends State<SellerSignUpPage> {
                 ),
                 const SizedBox(height: 30),
 
-                // Tombol Daftar
                 ElevatedButton(
                   onPressed: _signUp,
                   style: ElevatedButton.styleFrom(
