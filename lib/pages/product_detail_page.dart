@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
-import '../main.dart';
+import '../main.dart'; // <-- DIPERBAIKI
+import '../models/product.dart'; // <-- DIPERBAIKI
+import 'checkout_page.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
-
   const ProductDetailPage({super.key, required this.product});
 
   @override
@@ -16,113 +16,119 @@ class ProductDetailPage extends StatelessWidget {
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 📸 Gambar produk
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                product.imageUrl,
-                width: double.infinity,
-                height: 250,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // 📌 Nama & Harga
-            Text(
-              product.name,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              "Rp ${product.price.toStringAsFixed(0)}",
-              style: const TextStyle(
-                fontSize: 20,
-                color: Colors.orange,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // ⭐ Rating & Sold
-            Row(
-              children: [
-                Icon(Icons.star, color: Colors.amber.shade700),
-                const SizedBox(width: 4),
-                Text("${product.rating} • Terjual ${product.sold}"),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // 📖 Deskripsi
-            const Text(
-              "Deskripsi",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(product.description),
-            const SizedBox(height: 30),
-
-            // 🛒 Tombol aksi
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
-                    onPressed: () {
-                      // ✅ Cek apakah produk sudah ada di cart
-                      final existingIndex = cartItems.indexWhere(
-                        (p) => p.id == product.id,
-                      );
-                      if (existingIndex != -1) {
-                        cartItems[existingIndex].quantity++;
-                      } else {
-                        cartItems.add(product);
-                      }
-
-                      // Arahkan ke cart page
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MyHomePage(
-                            title: "OnMart",
-                            initialIndex: 2, // langsung ke tab Cart
-                          ),
-                        ),
-                      );
-                    },
-                    child: const Text("Tambah ke Keranjang"),
-                  ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: Image.asset(
+                  product.imageUrl,
+                  height: 250, // Tinggi tetap sama
+                  width: double.infinity,
+                  fit: BoxFit.contain, // <-- DIUBAH: Dari cover menjadi contain
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Rp ${product.price.toStringAsFixed(0)}",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      const SizedBox(width: 4),
+                      Text("${product.rating}"),
+                      const SizedBox(width: 8),
+                      const Text("|"),
+                      const SizedBox(width: 8),
+                      Text("${product.sold} terjual"),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "Deskripsi",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    product.description,
+                    style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.add_shopping_cart),
+                label: const Text("Tambah ke Keranjang"),
+                onPressed: () {
+                  // Logika untuk menambah ke keranjang
+                  cartItems.add(product);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${product.name} ditambahkan ke keranjang!'),
                       backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    onPressed: () {
-                      // 👉 Di sini bisa arahkan ke halaman checkout langsung
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            "Pembelian langsung ${product.name} berhasil!",
-                          ),
-                        ),
-                      );
-                    },
-                    child: const Text("Beli Langsung"),
-                  ),
+                  );
+                },
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
                 ),
-              ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.shopping_bag),
+                label: const Text("Beli Langsung"),
+                onPressed: () {
+                  // --- INI BAGIAN YANG DIPERBAIKI ---
+                  // 1. Buat keranjang sementara hanya dengan produk ini
+                  List<Product> singleItemCart = [product];
+                  double singleItemPrice = product.price;
+
+                  // 2. Arahkan ke Halaman Checkout
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CheckoutPage(
+                        cartItems: singleItemCart,
+                        totalPrice: singleItemPrice,
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
+              ),
             ),
           ],
         ),
@@ -130,3 +136,4 @@ class ProductDetailPage extends StatelessWidget {
     );
   }
 }
+
